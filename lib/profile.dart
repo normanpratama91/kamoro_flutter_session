@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:kamoro_flutter_session/models/list_api_data.dart';
 import 'package:kamoro_flutter_session/restApi.dart';
+import 'package:kamoro_flutter_session/services/interfaces/data_service.dart';
 
 class ProfileTestPage extends StatefulWidget {
   final String parameterData;
@@ -14,6 +17,13 @@ class ProfileTestPage extends StatefulWidget {
 }
 
 class _ProfileTestPageState extends State<ProfileTestPage> {
+  final _dataService = GetIt.instance.get<DataService>();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final stringParameter = widget.parameterData;
@@ -44,21 +54,18 @@ class _ProfileTestPageState extends State<ProfileTestPage> {
   }
 
   get _listFromApi {
-    final restApi = RestApi();
-    const url = "https://api.publicapis.org/entries";
-
     return FutureBuilder(
-      future: restApi.get(url),
+      future: _dataService.getData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          final dataApi = snapshot.data as dynamic;
+          final listApiData = snapshot.data as ListApiData;
 
-          final dataCount = dataApi != null ? dataApi["count"] : 0;
+          final dataCount = listApiData.count;
 
           return ListView.builder(
             itemCount: dataCount,
             itemBuilder: (context, index) {
-              final dataDisplay = dataApi["entries"][index];
+              final dataDisplay = listApiData.entries[index];
 
               return Card(
                 child: Padding(
@@ -67,13 +74,13 @@ class _ProfileTestPageState extends State<ProfileTestPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        dataDisplay["API"],
-                        style: TextStyle(
+                        dataDisplay.API ?? "",
+                        style: const TextStyle(
                             fontSize: 18,
                             color: Colors.amber,
                             fontWeight: FontWeight.bold),
                       ),
-                      Text(dataDisplay["Description"])
+                      Text(dataDisplay.Description ?? "")
                     ],
                   ),
                 ),
@@ -81,9 +88,7 @@ class _ProfileTestPageState extends State<ProfileTestPage> {
             },
           );
         } else {
-          return SizedBox(
-            child: Text("No data"),
-          );
+          return const SizedBox(child: CircularProgressIndicator());
         }
       },
     );
