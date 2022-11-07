@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kamoro_flutter_session/models/list_api_data.dart';
-import 'package:kamoro_flutter_session/restApi.dart';
+import 'package:kamoro_flutter_session/rest_api.dart';
 import 'package:kamoro_flutter_session/services/interfaces/data_service.dart';
 import 'package:kamoro_flutter_session/view_model/data_view_model.dart';
 import 'package:stacked/stacked.dart';

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kamoro_flutter_session/dependency_injection/service_locator.dart';
-import 'package:kamoro_flutter_session/getApiPage.dart';
+import 'package:kamoro_flutter_session/get_api_page.dart';
 
 Future<void> main() async {
   await setupServiceLocator();

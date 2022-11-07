@@ -1,7 +1,7 @@
 import 'package:kamoro_flutter_session/models/api_data.dart';
 import 'package:kamoro_flutter_session/models/list_api_data.dart';
 import 'package:kamoro_flutter_session/repositories/interfaces/data_repository.dart';
-import 'package:kamoro_flutter_session/restApi.dart';
+import 'package:kamoro_flutter_session/rest_api.dart';
 
 class DataRepositoryImpl implements DataRepository {
   @override
