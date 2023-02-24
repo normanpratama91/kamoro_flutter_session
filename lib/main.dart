@@ -74,7 +74,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
@@ -92,8 +91,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 ),
               ),
-
-           
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -103,12 +100,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       onPressed: () async {
                         if (_formKey.currentState != null &&
                             _formKey.currentState!.validate()) {
-                          final dataObj = {
-                            "username": userName,
-                            "password": password,
-                            // "gender": gender
-                          };
-
                           var token =
                               await DataViewModel().login(userName, password);
                           print(token);
@@ -119,20 +110,17 @@ class _MyHomePageState extends State<MyHomePage> {
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         // TestPage(parameterData: '')
-                                        ListPage()
-                                        ));
+                                        const ListPage()));
                           }
                         }
-
-                       
                       },
                       child: const Text('Login'),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child:
-                        ElevatedButton(onPressed: () {}, child: Text('Cancel')),
+                    child: ElevatedButton(
+                        onPressed: () {}, child: const Text('Cancel')),
                   )
                 ],
               )
@@ -140,7 +128,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-  
     );
   }
 }
