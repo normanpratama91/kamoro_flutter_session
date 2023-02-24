@@ -3,7 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kamoro_flutter_session/dependency_injection/service_locator.dart';
-import 'package:kamoro_flutter_session/get_api_page.dart';
+import 'package:kamoro_flutter_session/list_page.dart';
+import 'package:kamoro_flutter_session/test_page.dart';
+import 'package:kamoro_flutter_session/view_model/data_view_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stacked/stacked.dart';
 
 Future<void> main() async {
   await setupServiceLocator();
@@ -46,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Flutter Example Control Page"),
+        title: const Text("Flutter Example"),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -57,6 +61,9 @@ class _MyHomePageState extends State<MyHomePage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  onChanged: (value) {
+                    userName = value;
+                  },
                   decoration: const InputDecoration(
                       icon: Icon(Icons.person), labelText: 'Username'),
                   validator: (value) {
@@ -71,6 +78,9 @@ class _MyHomePageState extends State<MyHomePage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  onChanged: (value) {
+                    password = value;
+                  },
                   obscureText: true,
                   decoration: const InputDecoration(
                       icon: Icon(Icons.key), labelText: 'Password'),
@@ -82,81 +92,41 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 ),
               ),
-              // Padding(
-              //   padding: EdgeInsets.all(8.0),
-              //   child: TextField(
-              //     onChanged: (value) {
-              //       userName = value.toString();
-              //     },
-              //     obscureText: false,
-              //     decoration: InputDecoration(
-              //       border: OutlineInputBorder(),
-              //       labelText: 'User name',
-              //     ),
-              //   ),
-              // ),
-              // Padding(
-              //   padding: EdgeInsets.all(8.0),
-              //   child: TextField(
-              //     onChanged: (value) {
-              //       password = value.toString();
-              //     },
-              //     obscureText: true,
-              //     decoration: InputDecoration(
-              //       border: OutlineInputBorder(),
-              //       labelText: 'Password',
-              //     ),
-              //   ),
-              // ),
-              Column(
-                children: [
-                  RadioListTile(
-                    title: Text("Male"),
-                    value: "male",
-                    groupValue: gender,
-                    onChanged: (value) {
-                      setState(() {
-                        gender = value.toString();
-                      });
-                    },
-                  ),
-                  RadioListTile(
-                    title: Text("Female"),
-                    value: "female",
-                    groupValue: gender,
-                    onChanged: (value) {
-                      setState(() {
-                        gender = value.toString();
-                      });
-                    },
-                  ),
-                ],
-              ),
+
+           
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(left: 10, right: 10),
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState != null &&
                             _formKey.currentState!.validate()) {
                           final dataObj = {
                             "username": userName,
                             "password": password,
-                            "gender": gender
+                            // "gender": gender
                           };
 
-                          final encodedString = jsonEncode(dataObj);
+                          var token =
+                              await DataViewModel().login(userName, password);
+                          print(token);
 
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProfileTestPage(
-                                      parameterData: encodedString)));
+                          if (token != null) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        // TestPage(parameterData: '')
+                                        ListPage()
+                                        ));
+                          }
                         }
+
+                       
                       },
-                      child: const Text('Go to Get API'),
+                      child: const Text('Login'),
                     ),
                   ),
                   Padding(
@@ -170,13 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     Fluttertoast.showToast(msg: 'hellow');
-      //   },
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.ac_unit_outlined),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
+  
     );
   }
 }

@@ -8,4 +8,9 @@ class DataServiceImpl implements DataService {
   Future getData() async {
     return await _dataRepository.getData();
   }
+
+  @override
+  Future login(String user, String password) {
+    return _dataRepository.login(user, password);
+  }
 }

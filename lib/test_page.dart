@@ -4,22 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:kamoro_flutter_session/models/list_api_data.dart';
-import 'package:kamoro_flutter_session/rest_api.dart';
+import 'package:kamoro_flutter_session/helpers/rest_api.dart';
 import 'package:kamoro_flutter_session/services/interfaces/data_service.dart';
 import 'package:kamoro_flutter_session/view_model/data_view_model.dart';
 import 'package:stacked/stacked.dart';
 
-class ProfileTestPage extends StatefulWidget {
+class TestPage extends StatefulWidget {
   final String parameterData;
 
-  const ProfileTestPage({Key? key, required this.parameterData})
-      : super(key: key);
+  const TestPage({Key? key, required this.parameterData}) : super(key: key);
 
   @override
-  State<ProfileTestPage> createState() => _ProfileTestPageState();
+  State<TestPage> createState() => _TestPageState();
 }
 
-class _ProfileTestPageState extends State<ProfileTestPage> {
+class _TestPageState extends State<TestPage> {
   final _dataService = GetIt.instance.get<DataService>();
 
   @override
@@ -53,15 +52,6 @@ class _ProfileTestPageState extends State<ProfileTestPage> {
     );
   }
 
-  Future postData() async {
-    final restApi = RestApi();
-    const url = ""; //isi post URL
-
-    final jsonRequestBody = {"userName": "john_doe@kamoro.com"};
-    final result = await restApi.post(url, jsonRequestBody);
-
-    print(result);
-  }
 
 // viewmodel implementation
   get _listFromApiViewModel {
@@ -125,45 +115,4 @@ class _ProfileTestPageState extends State<ProfileTestPage> {
     );
   }
 
-// not best practice, need to use ViewModel
-  get _listFromApi {
-    return FutureBuilder(
-      future: _dataService.getData(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final listApiData = snapshot.data as ListApiData;
-
-          final dataCount = listApiData.count;
-
-          return ListView.builder(
-            itemCount: dataCount,
-            itemBuilder: (context, index) {
-              final dataDisplay = listApiData.entries[index];
-
-              return Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        dataDisplay.API ?? "",
-                        style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.amber,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(dataDisplay.Description ?? "")
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        } else {
-          return const SizedBox(child: CircularProgressIndicator());
-        }
-      },
-    );
-  }
 }
