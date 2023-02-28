@@ -13,4 +13,14 @@ class DataServiceImpl implements DataService {
   Future login(String user, String password) {
     return _dataRepository.login(user, password);
   }
+
+  @override
+  Future getLookup(int id) {
+    return _dataRepository.getLookup(id);
+  }
+
+  @override
+  Future postLookup(body) {
+    return _dataRepository.postLookup(body);
+  }
 }

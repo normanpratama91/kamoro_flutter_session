@@ -2,41 +2,62 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RestApi {
   Future? get(url) async {
     Uri uri = Uri.parse(url);
 
-    final headers = {'Authorization': '', 'Accept-version': '1.0.0'};
+    final shr = await SharedPreferences.getInstance();
+    final token = shr.getString('token');
+
+    final headers = {
+      "Content-type": "application/json",
+      "Authorization": "Bearer $token"
+    };
+
     final response = await http.get(uri, headers: headers);
     if (response.statusCode == 200) {
       final res = response.body;
 
+      print(res);
       return jsonDecode(res);
     } else {
       throw Exception("${response.statusCode} ${response.body}");
     }
   }
 
-  Future? post(String url, dynamic jsonRequestBody,
-      {Map<String, String>? headers}) async {
+  Future? post(
+    String url,
+    dynamic jsonRequestBody,
+  ) async {
     Uri uri = Uri.parse(url);
-    // final headers = {'Authorization': 'Bearer asdf', 'Accept-version': '1.0.0'};
-
     print(jsonRequestBody);
 
     try {
+      final shr = await SharedPreferences.getInstance();
+      final token = shr.getString('token');
+
+      final headers = {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $token"
+      };
+
       final response = await http.post(uri,
-          headers: {"Content-type": "application/json"},
-          body: jsonEncode(jsonRequestBody));
+          headers: headers, body: jsonEncode(jsonRequestBody));
       print(response.statusCode);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final res = response.body;
 
+        print(res);
         return res;
       } else {
-        return null;
+
+        final res = response.body;
+
+        print(res);
+        return res;
       }
     } on Exception catch (e) {
       print(e);
@@ -46,16 +67,4 @@ class RestApi {
   Future? put() {}
 
   Future? delete() {}
-
-  Future<Map<String, String>> _getHttpHeaders() async {
-    final headers = <String, String>{};
-
-    // if (token != null) {
-    //   headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
-    // }
-
-    headers[HttpHeaders.contentTypeHeader] = 'application/json';
-
-    return headers;
-  }
 }

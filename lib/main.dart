@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kamoro_flutter_session/dependency_injection/service_locator.dart';
-import 'package:kamoro_flutter_session/list_page.dart';
-import 'package:kamoro_flutter_session/test_page.dart';
+import 'package:kamoro_flutter_session/ui/list_page.dart';
+import 'package:kamoro_flutter_session/ui/test_page.dart';
 import 'package:kamoro_flutter_session/view_model/data_view_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
@@ -12,20 +12,33 @@ import 'package:stacked/stacked.dart';
 Future<void> main() async {
   await setupServiceLocator();
 
-  runApp(const MyApp());
+  final shr = await SharedPreferences.getInstance();
+  final token = shr.getString('token');
+
+  bool isLogin = false;
+  if (token != null) {
+    isLogin = true;
+  }
+
+  runApp(MyApp(isLogin: isLogin));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key, required this.isLogin}) : super(key: key);
+
+  final bool isLogin;
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    var home =
+        isLogin ? ListPage() : const MyHomePage(title: 'Flutter Demo Kamoro');
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
           appBarTheme: const AppBarTheme(), primarySwatch: Colors.blue),
-      home: const MyHomePage(title: 'Flutter Demo Kamoro'),
+      home: home,
     );
   }
 }

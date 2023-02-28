@@ -30,4 +30,34 @@ class DataRepositoryImpl implements DataRepository {
       print(e);
     }
   }
+
+  @override
+  Future getLookup(int id) async {
+    final restApi = RestApi();
+    final url = "https://localhost:7230/api/v1/Lookup/${id.toString()}";
+
+    try {
+      final token = await restApi.get(url);
+
+      return token;
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  Future postLookup(body) async {
+    final restApi = RestApi();
+    const url = "https://localhost:7230/api/v1/Lookup";
+
+    print(body);
+
+    try {
+      final token = await restApi.post(url, body);
+
+      return token;
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
 }

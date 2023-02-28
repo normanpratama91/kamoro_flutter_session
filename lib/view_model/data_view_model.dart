@@ -32,4 +32,21 @@ class DataViewModel extends BaseViewModel {
 
     return result;
   }
+
+  
+  // LOOKUP
+  Future getLookup(int id) async {
+    //call service layer here
+    final svc = _dataService.getLookup(id);
+    var result = await runBusyFuture(svc);
+
+    return result;
+  }
+  Future postLookup(dynamic body) async {
+    //call service layer here
+    final svc = _dataService.postLookup(body);
+    var result = await runBusyFuture(svc);
+
+    return result;
+  }
 }
